@@ -1,0 +1,29 @@
+Block 1: View Current Routing Table
+You can use either command here. They both do the exact same thing. The -n flag tells it to show numbers (IP addresses) instead of trying to look up names, making it much faster.
+
+Bash
+# Using netstat (as asked in the question)
+netstat -rn
+
+# Or using route directly
+route -n
+Block 2: Add and Delete Routes
+Let's pretend you want to add a route to a new network 10.0.0.0 and send that traffic through your router at 192.168.1.1.
+
+Bash
+# 1. ADD a route
+sudo route add -net 10.0.0.0 netmask 255.0.0.0 gw 192.168.1.1
+
+# 2. DELETE that exact same route
+sudo route del -net 10.0.0.0 netmask 255.0.0.0
+(Pro tip for the exam: Just memorize the add command. For del, you literally just swap the word add for del and drop the gw part).
+
+Block 3: Change Default Gateway
+Changing your default gateway (your main router) is a two-step process: you add the new one, then delete the old one.
+
+Bash
+# 1. Add the NEW default gateway (e.g., 192.168.1.254)
+sudo route add default gw 192.168.1.254
+
+# 2. Delete the OLD default gateway (e.g., 192.168.1.1)
+sudo route del default gw 192.168.1.1

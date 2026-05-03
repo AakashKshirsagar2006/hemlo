@@ -1,0 +1,63 @@
+Block 1: The Setup (Linux)
+If Nmap isn't already installed on the lab computer, run this first.
+
+Bash
+# 1. Update and install Nmap
+sudo apt update
+sudo apt install nmap
+
+# 2. Find your target's IP address (or just use 'localhost' to scan your own machine)
+# If scanning another PC, get their IP using 'ip a' on their machine.
+Block 2: The Core Commands (The actual exam answer)
+Run these from the Linux terminal. Replace localhost with an IP address like 192.168.1.5 if the examiner asks you to scan a different PC.
+
+Bash
+# 1. THE BASIC SCAN (Identifies Open/Closed Ports)
+# This scans the 1,000 most common ports.
+nmap localhost
+
+# 2. THE SERVICE SCAN (Identifies exactly what is running)
+# The '-sV' flag stands for Service Version. This fulfills the "and services" part of your question.
+nmap -sV localhost
+
+# 3. THE FLEX SCAN (Operating System Detection)
+# The '-O' flag guesses the target's Operating System. Use this to impress the examiner.
+# (Requires sudo)
+sudo nmap -O localhost
+Block 3: How to read the output for the Examiner
+When you run nmap -sV localhost, you will get a table that looks like this:
+
+Plaintext
+PORT     STATE  SERVICE VERSION
+22/tcp   open   ssh     OpenSSH 8.2p1 Ubuntu 
+23/tcp   open   telnet  Linux telnetd
+80/tcp   closed http
+How to explain it if the examiner asks:
+
+Open: An application on the target machine is actively listening for connections on this port (like the Telnet server we just built!).
+
+Closed: The port is accessible, but there is no application listening on it right now.
+
+Filtered (Sometimes shows up): A firewall is blocking Nmap from seeing if the port is open or closed.
+
+Service/Version: Tells you exactly what software is running (e.g., OpenSSH, Telnetd, Apache).
+
+Flex 1: netdiscover (The Local Network Sweeper)
+While Nmap scans one machine for ports, netdiscover scans the entire Wi-Fi network to find every single device connected to it (using ARP requests).
+
+Bash
+# 1. Install it
+sudo apt install netdiscover
+
+# 2. Run it to find every device on your current network
+# (Assuming your IP is 192.168.1.something)
+sudo netdiscover -r 192.168.1.0/24
+Output: A clean table showing the IP address and MAC address (hardware address) of every phone, laptop, and router on the network.
+
+Flex 2: traceroute (The Path Finder)
+This discovers the actual route your data takes across the internet to reach a destination, listing every router it hits along the way.
+
+Bash
+# Discover the path to Google's servers
+traceroute google.com
+# (If on Windows, the command is 'tracert google.com')
