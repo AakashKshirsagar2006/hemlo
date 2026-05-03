@@ -1,0 +1,41 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main() {
+    string d, g, t, r;
+
+    // 1. Inputs
+    cout << "Enter Data & Generator: ";
+    cin >> d >> g;
+
+    int dl = d.length(), gl = g.length();
+    t = d + string(gl - 1, '0'); // Automatically append N-1 zeros
+
+    // 2. Sender: CRC Generation using the XOR trick
+    for(int i = 0; i < dl; i++)
+        if(t[i] == '1')
+            for(int j = 0; j < gl; j++)
+                t[i+j] = (t[i+j] ^ g[j]) + '0'; // THE MAGIC TRICK
+
+    cout << "Transmitted Message: " << d << t.substr(dl) << "\n\n";
+
+    // 3. Receiver: Error Check
+    cout << "Enter Received Message: ";
+    cin >> r;
+
+    for(int i = 0; i < r.length() - gl + 1; i++)
+        if(r[i] == '1')
+            for(int j = 0; j < gl; j++)
+                r[i+j] = (r[i+j] ^ g[j]) + '0';
+
+    // 4. Verdict
+    bool err = false;
+    for(int i = r.length() - gl + 1; i < r.length(); i++)
+        if(r[i] == '1') err = true;
+
+    cout << (err ? "Result: Error detected!\n" : "Result: No error.\n");
+
+    return 0;
+}

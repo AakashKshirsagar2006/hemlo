@@ -1,0 +1,87 @@
+Server.java --> do alag alag files banani hai
+import java.net.*;
+import java.io.*;
+
+public class Server {
+    public static void main(String[] args) throws Exception {
+        // 1. Open port 5000 and wait
+        ServerSocket server = new ServerSocket(5000);
+        System.out.println("Waiting for client...");
+        
+        // 2. Accept the incoming client connection
+        Socket socket = server.accept();
+        System.out.println("Client connected!");
+
+        // 3. Setup the read/write pipes
+        BufferedReader readFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        PrintWriter writeToClient = new PrintWriter(socket.getOutputStream(), true);
+        BufferedReader readKeyboard = new BufferedReader(new InputStreamReader(System.in));
+
+        // 4. Start a background thread just to READ messages continuously
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    String msg;
+                    while ((msg = readFromClient.readLine()) != null) {
+                        System.out.println("Client: " + msg);
+                    }
+                } catch (Exception e) {}
+            }
+        }).start();
+
+        // 5. Main loop to WRITE messages from keyboard
+        String myMsg;
+        while ((myMsg = readKeyboard.readLine()) != null) {
+            writeToClient.println(myMsg);
+        }
+
+        socket.close();
+        server.close();
+    }
+}
+
+Client.java --->>>
+import java.net.*;
+import java.io.*;
+
+public class Client {
+    public static void main(String[] args) throws Exception {
+        // 1. Dial the server at localhost on port 5000
+        Socket socket = new Socket("localhost", 5000);
+        System.out.println("Connected to server!");
+
+        // 2. Setup the read/write pipes
+        BufferedReader readFromServer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        PrintWriter writeToServer = new PrintWriter(socket.getOutputStream(), true);
+        BufferedReader readKeyboard = new BufferedReader(new InputStreamReader(System.in));
+
+        // 3. Start a background thread just to READ messages continuously
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    String msg;
+                    while ((msg = readFromServer.readLine()) != null) {
+                        System.out.println("Server: " + msg);
+                    }
+                } catch (Exception e) {}
+            }
+        }).start();
+
+        // 4. Main loop to WRITE messages from keyboard
+        String myMsg;
+        while ((myMsg = readKeyboard.readLine()) != null) {
+            writeToServer.println(myMsg);
+        }
+
+        socket.close();
+    }
+}
+
+runnnnn --->
+2 terminal open...
+in 1st terminal -->
+javac Server.java Client.java
+java Server
+
+in 2nd ter -->> 
+java Client

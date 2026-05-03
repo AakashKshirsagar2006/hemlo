@@ -1,0 +1,68 @@
+Scenario 1: Linux as Server & Windows as Client
+On the Linux Server (The computer being controlled):
+
+Bash
+# 1. Install and start the server
+sudo apt update
+sudo apt install telnetd
+sudo systemctl start inetd
+
+# 2. Open the port
+sudo ufw enable
+sudo ufw allow 23
+
+# 3. Find this PC's IP address (Write it down!)
+ip a
+On the Windows Client (The computer doing the controlling):
+
+Plaintext
+# 1. Enable Client
+Go to Control Panel -> Programs -> Turn Windows features on or off. 
+Check "Telnet Client" and hit OK.
+
+# 2. Open CMD as Administrator and connect
+telnet <Server_IP_Address>
+
+# 3. Prove it works
+Login with the Linux Server's username and password.
+Type: whoami
+Scenario 2: Linux as Server & Linux as Client (Two different PCs)
+On the Linux Server:
+
+Bash
+# Exactly the same as Scenario 1
+sudo apt update
+sudo apt install telnetd
+sudo systemctl start inetd
+sudo ufw enable
+sudo ufw allow 23
+ip a  # Get the IP address
+On the Linux Client (The second PC):
+
+Bash
+# 1. Install the client software
+sudo apt install telnet
+
+# 2. Connect to the server
+telnet <Server_IP_Address>
+
+# 3. Prove it works
+# Login with the Server's credentials, then run:
+whoami
+Scenario 3: Linux as Server & Client (Everything on ONE single PC)
+On your single Linux Terminal:
+
+Bash
+# 1. Install BOTH server and client at the same time
+sudo apt update
+sudo apt install telnetd telnet
+
+# 2. Start the server
+sudo systemctl start inetd
+
+# 3. Connect to YOURSELF (No IP address needed)
+telnet localhost
+
+# 4. Prove it works
+# Login with your current Linux credentials, then run:
+whoami
