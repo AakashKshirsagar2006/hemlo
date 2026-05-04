@@ -1,0 +1,32 @@
+Block 1: Linux (The easy ifconfig way)
+This uses the old-school net-tools package your lab seems to be using based on the previous question.
+
+Bash
+# 1. Find your main network interface name 
+# Look for something like 'eth0', 'enp0s3', or 'wlan0'
+ifconfig
+
+# 2. Add the second IP address by creating a "virtual" interface
+# If your main is eth0, we name the alias eth0:1
+sudo ifconfig eth0:1 192.168.1.200 netmask 255.255.255.0 up
+
+# 3. Prove it worked
+# Run this again and you will see both eth0 and eth0:1 with their own IPs
+ifconfig
+(Flex Note: If the examiner says ifconfig is deprecated and asks for the modern command, drop this on them: sudo ip addr add 192.168.1.200/24 dev eth0)
+
+Block 2: Windows (The CMD way)
+If you are stuck on a Windows machine, you use the netsh (Network Shell) command. You MUST run Command Prompt as Administrator.
+
+DOS
+# 1. Find your interface name
+# Look for the name like "Ethernet" or "Wi-Fi"
+ipconfig
+
+# 2. Add the second IP address 
+# Make sure you put the interface name in quotes if it has spaces
+netsh interface ipv4 add address "Ethernet" 192.168.1.200 255.255.255.0
+
+# 3. Prove it worked
+# You will now see two IPv4 addresses under the same adapter
+ipconfig
