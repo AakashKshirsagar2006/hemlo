@@ -39,3 +39,53 @@ int main() {
 
     return 0;
 }
+=====================================================
+Crc: #include <stdio.h>
+#include <string.h>
+
+void xor(char *a, char *b, char *result) {
+    for (int i = 1; i < strlen(b); i++) {
+        result[i - 1] = (a[i] == b[i]) ? '0' : '1';
+    }
+    result[strlen(b) - 1] = '\0';
+}
+
+void crc(char *data, char *divisor) {
+    char temp[100], result[100];
+    int n = strlen(divisor);
+
+    strncpy(temp, data, n);
+
+    for (int i = n; i <= strlen(data); i++) {
+        if (temp[0] == '1')
+            xor(temp, divisor, result);
+        else
+            xor(temp, "0000", result); // same length as divisor
+
+        if (i < strlen(data)) {
+            strncat(result, &data[i], 1);
+        }
+        strcpy(temp, result);
+    }
+
+    printf("CRC Remainder: %s\n", result);
+}
+
+int main() {
+    char data[100], divisor[10];
+
+    printf("Enter data: ");
+    scanf("%s", data);
+
+    printf("Enter divisor: ");
+    scanf("%s", divisor);
+
+    // Append zeros
+    int d = strlen(divisor);
+    for (int i = 0; i < d - 1; i++) {
+        strcat(data, "0");
+    }
+
+    crc(data, divisor);
+    return 0;
+}
